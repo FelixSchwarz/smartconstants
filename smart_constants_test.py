@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+from __future__ import absolute_import
+
 from pythonic_testcase import *
 
 from smart_constants import attrs, BaseConstantsClass
@@ -14,21 +16,20 @@ class DummyConstants(BaseConstantsClass):
     def fnord(self):
         return None
 
-class TestBaseConstantsClass(PythonicTestCase):
-    
-    def test_private_namen_werden_ignoriert(self):
+class BaseConstantsClassTest(PythonicTestCase):
+    def test_ignores_private_names(self):
         assert_not_contains("_fnord", DummyConstants.constants())
     
-    def test_funktionen_werden_ignoriert(self):
+    def test_ignores_functions(self):
         assert_not_contains("fnord", DummyConstants.constants())
     
-    def test_kann_namen_aller_definierten_konstanten_abrufen(self):
+    def test_can_get_names_of_all_defined_constants(self):
         assert_equals(("foo", "bar"), DummyConstants.constants())
     
-    def test_kann_werte_aller_definierten_konstanten_abrufen(self):
+    def test_can_get_values_of_all_defined_constants(self):
         assert_equals(("bar", "quux"), DummyConstants.values())
     
-    def test_kann_konstantenname_fuer_gegebenen_wert_ermitteln(self):
+    def test_can_return_name_for_specified_value(self):
         assert_equals("bar", DummyConstants.constant_for("quux"))
 
 
@@ -42,43 +43,42 @@ class CodesWithHiddenAttributes(BaseConstantsClass):
     foo = 4, attrs(label="Foo", visible=False)
     bar = 5, attrs(label="Bar", visible=True)
 
-class TestMethodAutoGenerationForBaseConstants(PythonicTestCase):
-    
-    def test_kann_values_auch_mit_erweiterten_attributen_ermitteln(self):
+class MethodAutoGenerationForBaseConstantsTest(PythonicTestCase):
+    def test_can_get_values_even_with_extended_attributes(self):
         assert_equals((4, 5, 2), CodesWithAttributes.values())
     
-    def test_kann_wert_fuer_konstante_einfach_verwenden(self):
+    def test_can_access_constants_as_attributes(self):
         assert_equals(4, CodesWithAttributes.foo)
     
-    def test_kann_constants_auch_mit_erweiterten_attributen_ermitteln(self):
+    def test_can_get_constant_names_even_with_extended_attributes(self):
         assert_equals(("foo", "bar", "qux"), CodesWithAttributes.constants())
     
-    def test_kann_optionen_fuer_select_automatisch_generieren(self):
+    def test_can_return_options_for_select(self):
         assert_equals(((4, "Foo"), (5, "Bar"), (2, "Quux")), 
                       CodesWithAttributes.options())
     
-    def test_ausgeblendete_optionen_tauchen_nicht_im_select_auf(self):
+    def test_hidden_constants_are_not_returned_for_select(self):
         assert_equals(((5, "Bar"),), CodesWithHiddenAttributes.options())
     
-    def test_optionen_fuer_select_enthaelt_auch_bisherigen_wert_selbst_wenn_nicht_sichtbar(self):
-        """Wenn ein Wert nicht mehr im Select-Feld sichtbar ist, würde automatisch
-        ein anderer Wert im Select-Feld ausgewählt werden. Dadurch würde beim 
-        Speichern des Datensatzes automatisch der Wert geändert, was ggf. nicht
-        gewollt ist."""
+    def test_can_return_hidden_constant_if_it_is_the_current_value(self):
+        """Sometimes it is desirable to allow certain values in a select field
+        even if the constant is usually hidden. For example some constants
+        should be phased out but existing data should be editable without the
+        need to change the current value."""
         assert_equals(((5, "Bar"),), CodesWithHiddenAttributes.options())
         
         options = CodesWithHiddenAttributes.options(current_value=CodesWithHiddenAttributes.foo)
         assert_equals(((4, "Foo"), (5, "Bar")), options)
     
-    def test_kann_label_fuer_wert_erhalten(self):
+    def test_can_get_label_for_value(self):
         assert_equals("Foo", CodesWithAttributes.label_for(CodesWithAttributes.foo))
         assert_equals("Quux", CodesWithAttributes.label_for(CodesWithAttributes.qux))
     
-    def test_bei_einfachen_konstanten_wird_wert_als_label_verwendet(self):
+    def test_uses_value_as_label_for_simple_constants(self):
         assert_equals("quux", DummyConstants.label_for(DummyConstants.bar))
 
 
-class TestConstantWithEmptyValue(PythonicTestCase):
+class ConstantWithEmptyValueTest(PythonicTestCase):
     def test_can_define_optional_value_with_string_label(self):
         class OptionalCode(BaseConstantsClass):
             _ = 'empty'
