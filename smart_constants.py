@@ -8,10 +8,11 @@ __all__ = ["attrs", "BaseConstantsClass"]
 class attrs(object):
     counter = 0
     
-    def __init__(self, label=None, visible=True, value=None):
+    def __init__(self, label=None, visible=True, value=None, data=None):
         self.label = label
         self.visible = visible
         self.value = value
+        self.data = data
         
         # declaration of attributes should affect ordering of items later on
         # (e.g. in a select widget). In Python 2 we have to use some workarounds
@@ -22,8 +23,8 @@ class attrs(object):
     
     def __repr__(self):
         classname = self.__class__.__name__
-        parameters = (classname, self.label, self.visible, self.value, self._order)
-        return '%s(label=%r, visible=%r, value=%r, _order=%r)' % parameters
+        parameters = (classname, self.label, self.visible, self.value, self.data, self._order)
+        return '%s(label=%r, visible=%r, value=%r, data=%r, _order=%r)' % parameters
 
 
 class ConstantValueBuilder(type):
@@ -46,7 +47,7 @@ class ConstantValueBuilder(type):
         constants = []
         for name in attributes:
             # '_' means 'empty value' (because we can't assign to None)
-            # need t hat but other private attributes should be ignored
+            # need that but other private attributes should be ignored
             if name.startswith('_') and name != '_':
                 continue
             value = attributes[name]
@@ -131,6 +132,13 @@ class BaseConstantsClass(object):
         constant = cls.constant_for(a_value)
         attributes = cls._constants_map[constant]
         return attributes.label
+    
+    
+    @classmethod
+    def data_for(cls, a_value):
+        constant = cls.constant_for(a_value)
+        attributes = cls._constants_map[constant]
+        return attributes.data
     
     
     @classmethod

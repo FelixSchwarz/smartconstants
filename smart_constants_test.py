@@ -107,3 +107,11 @@ class ConstantWithEmptyValueTest(PythonicTestCase):
         assert_equals(((None, None), (4, 'Foo')), 
                       OptionalCode.options(current_value=None))
 
+
+class ConstantWithCustomDataTest(PythonicTestCase):
+    def test_can_add_custom_data(self):
+        class OptionalData(BaseConstantsClass):
+            foo = 4, attrs(data=[1, 2, 3])
+        
+        assert_equals([1, 2, 3], OptionalData.data_for(OptionalData.foo))
+
