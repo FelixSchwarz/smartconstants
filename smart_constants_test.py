@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+# Copyright 2010-2013 Felix Schwarz
+# The source code in this file is licensed under the MIT license.
 
 from __future__ import absolute_import
 
