@@ -1,0 +1,3 @@
+include Changelog.txt
+include LICENSE.txt
+include smart_constants_test.py
