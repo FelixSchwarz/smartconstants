@@ -1,6 +1,10 @@
 Changelog
 ******************************
 
+1.0.1 (14.10.2015)
+====================
+- fix installing from sdist by including requirements.txt
+
 1.0 (07.10.2015)
 ====================
 - compatibility with Python 3
