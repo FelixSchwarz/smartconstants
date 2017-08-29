@@ -64,7 +64,10 @@ class ConstantValueBuilder(type):
     def __new__(cls, classname, direct_superclasses, class_attributes_dict):
         constants = cls._constants(class_attributes_dict)
         constants_map = cls._add_class_attributes_for_simple_access(class_attributes_dict, constants)
-        class_attributes_dict['_constants_map'] = constants_map
+        class_attributes_dict.update({
+            '_constants_map': constants_map,
+            '_enum': None,
+        })
         constants_class = cls.instantiate(classname, direct_superclasses, class_attributes_dict)
 
         constants_class._constants = cls.declaration_order_of_constants(constants_class, class_attributes_dict)
@@ -183,19 +186,21 @@ class BaseConstantsClass(six.with_metaclass(ConstantValueBuilder, object)):
     
     
     @classmethod
-    def options(cls, current_value=NotSet):
+    def options(cls, current_value=NotSet, exclude_invisible=True):
         """Gibt eine Liste von Tupeln (value, label) zurück, die für 
         Select-Felder genutzt werden können."""
         _options = []
         for key in cls._constants:
             attr = cls._constants_map[key]
-            if (not attr.visible) and (not attr.value == current_value):
+            if exclude_invisible and (not attr.visible) and (not attr.value == current_value):
                 continue
             _options.append((attr.value, attr.label))
         return tuple(_options)
 
     @classmethod
     def as_enum(cls):
+        if cls._enum is not None:
+            return cls._enum
         enum_options = dict()
         for key, constant in cls._constants_map.items():
             enum_options[key] = constant.value
@@ -203,6 +208,6 @@ class BaseConstantsClass(six.with_metaclass(ConstantValueBuilder, object)):
         # Python 2.6-3.4)
         # If enum is not available just fail with an ImportError.
         from enum import Enum
-        enum_instance = Enum(cls.__name__, enum_options)
-        return enum_instance
+        cls._enum = Enum(cls.__name__, enum_options)
+        return cls._enum
 

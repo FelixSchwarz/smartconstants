@@ -48,6 +48,12 @@ class BaseConstantsClassTest(PythonicTestCase):
         assert_equals('quux', dummy_enum.bar.value)
         assert_false(hasattr(dummy_enum, '_fnord'))
 
+        dummy_enum2 = DummyConstants.as_enum()
+        assert_equals(
+            id(dummy_enum), id(dummy_enum2),
+            message='returned enum instance should be a singleton'
+        )
+
 
 class CodesWithAttributes(BaseConstantsClass):
     foo = 4, attrs(label="Foo")
