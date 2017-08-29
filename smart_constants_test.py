@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright 2010-2013 Felix Schwarz
+# Copyright 2010-2013, 2017 Felix Schwarz
 # The source code in this file is licensed under the MIT license.
 
 from __future__ import absolute_import
@@ -33,6 +33,20 @@ class BaseConstantsClassTest(PythonicTestCase):
     
     def test_can_return_name_for_specified_value(self):
         assert_equals("bar", DummyConstants.constant_for("quux"))
+
+    def test_can_return_enum_instance(self):
+        try:
+            import enum
+            has_enum = True
+        except ImportError:
+            has_enum = False
+        if not has_enum:
+            self.skipTest('no enum module available')
+
+        dummy_enum = DummyConstants.as_enum()
+        assert_equals('bar', dummy_enum.foo.value)
+        assert_equals('quux', dummy_enum.bar.value)
+        assert_false(hasattr(dummy_enum, '_fnord'))
 
 
 class CodesWithAttributes(BaseConstantsClass):

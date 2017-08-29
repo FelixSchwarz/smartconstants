@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright 2010-2015 Felix Schwarz
+# Copyright 2010-2015, 2017 Felix Schwarz
 # The source code in this file is licensed under the MIT license.
 
 from collections import namedtuple
@@ -194,4 +194,15 @@ class BaseConstantsClass(six.with_metaclass(ConstantValueBuilder, object)):
             _options.append((attr.value, attr.label))
         return tuple(_options)
 
+    @classmethod
+    def as_enum(cls):
+        enum_options = dict()
+        for key, constant in cls._constants_map.items():
+            enum_options[key] = constant.value
+        # enum was added in Python 3.4 (backport 'enum34' available for
+        # Python 2.6-3.4)
+        # If enum is not available just fail with an ImportError.
+        from enum import Enum
+        enum_instance = Enum(cls.__name__, enum_options)
+        return enum_instance
 
