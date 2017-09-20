@@ -1,1 +1,2 @@
-pythonic_testcase
+# skip_test support
+PythonicTestcase >= 1.3.3

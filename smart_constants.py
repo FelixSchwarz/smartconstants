@@ -7,6 +7,7 @@ import inspect
 
 import six
 
+
 __all__ = ["attrs", "BaseConstantsClass"]
 
 
@@ -139,6 +140,14 @@ class ConstantValueBuilder(type):
         else:
             sorted_names = sorted(unsorted_names, key=lambda name: constants_map[name]._order)
         return tuple(sorted_names)
+
+    # This is a class-level property so custom BaseConstantsClass'es also have
+    # a class-level "__members__" attribute.
+    # This is convenient because you can pass these classes directly into
+    # SQLAlchemy's Enum().
+    @property
+    def __members__(cls):
+        return cls.as_enum().__members__
 
 
 class NotSet(object):

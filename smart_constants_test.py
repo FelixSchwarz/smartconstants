@@ -18,6 +18,16 @@ class DummyConstants(BaseConstantsClass):
     def fnord(self):
         return None
 
+def skip_unless_enum_is_available():
+    try:
+        import enum
+        has_enum = True
+    except ImportError:
+        has_enum = False
+    if not has_enum:
+        skip_test('no enum module available')
+
+
 class BaseConstantsClassTest(PythonicTestCase):
     def test_ignores_private_names(self):
         assert_not_contains("_fnord", DummyConstants.constants())
@@ -35,14 +45,7 @@ class BaseConstantsClassTest(PythonicTestCase):
         assert_equals("bar", DummyConstants.constant_for("quux"))
 
     def test_can_return_enum_instance(self):
-        try:
-            import enum
-            has_enum = True
-        except ImportError:
-            has_enum = False
-        if not has_enum:
-            self.skipTest('no enum module available')
-
+        skip_unless_enum_is_available()
         dummy_enum = DummyConstants.as_enum()
         assert_equals('bar', dummy_enum.foo.value)
         assert_equals('quux', dummy_enum.bar.value)
@@ -53,6 +56,12 @@ class BaseConstantsClassTest(PythonicTestCase):
             id(dummy_enum), id(dummy_enum2),
             message='returned enum instance should be a singleton'
         )
+
+    def test_provides_enum_methods(self):
+        skip_unless_enum_is_available()
+        assert_true(hasattr(DummyConstants, '__members__'))
+        dummy_enum = DummyConstants.as_enum()
+        assert_equals(dummy_enum.__members__, DummyConstants.__members__)
 
 
 class CodesWithAttributes(BaseConstantsClass):
