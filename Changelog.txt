@@ -1,6 +1,12 @@
 Changelog
 ******************************
 
+1.1.0 (21.09.2017)
+====================
+- ability to return an Enum instance
+- BaseConstantsClass now has a class-level "__members__" property
+  for improved Enum compatibility
+
 1.0.1 (14.10.2015)
 ====================
 - fix installing from sdist by including requirements.txt
