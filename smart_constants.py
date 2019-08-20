@@ -2,6 +2,8 @@
 # Copyright 2010-2015, 2017 Felix Schwarz
 # The source code in this file is licensed under the MIT license.
 
+from __future__ import absolute_import, print_function, unicode_literals
+
 from collections import namedtuple
 import inspect
 
