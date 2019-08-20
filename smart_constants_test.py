@@ -146,3 +146,19 @@ class ConstantWithCustomDataTest(PythonicTestCase):
         
         assert_equals([1, 2, 3], OptionalData.data_for(OptionalData.foo))
 
+    def test_can_add_custom_data_with_arbitrary_attribute_names(self):
+        data_as_list = attrs(data=[42, 21])
+        assert_equals([42, 21], data_as_list.data)
+
+        kw_only = attrs(answer=42, question=21)
+        assert_equals(
+            {'answer': 42, 'question': 21},
+            kw_only.data
+        )
+
+        data_as_dict = attrs(data={'answer': 42, 'question': 21})
+        assert_equals(
+            {'answer': 42, 'question': 21},
+            data_as_dict.data
+        )
+
