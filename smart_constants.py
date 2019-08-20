@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright 2010-2015, 2017 Felix Schwarz
+# Copyright 2010-2015, 2017, 2019 Felix Schwarz
 # The source code in this file is licensed under the MIT license.
 
 from __future__ import absolute_import, print_function, unicode_literals
@@ -33,12 +33,14 @@ def sort_by_list(values, id_list, key_callable):
 class attrs(object):
     counter = 0
     
-    def __init__(self, label=None, visible=True, value=None, data=None):
+    def __init__(self, label=None, visible=True, value=None, data=None, **kwdata):
         self.label = label
         self.visible = visible
         self.value = value
-        self.data = data
-        
+        if (data is not None) and kwdata:
+            raise ValueError('please use either "data=..." or "foo=..., bar=..."')
+        self.data = kwdata if kwdata else data
+
         # declaration of attributes should affect ordering of items later on
         # (e.g. in a select widget). In Python 2 we have to use some workarounds
         # to make that happen.

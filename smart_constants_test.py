@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright 2010-2013, 2017 Felix Schwarz
+# Copyright 2010-2013, 2017, 2019 Felix Schwarz
 # The source code in this file is licensed under the MIT license.
 
 from __future__ import absolute_import, print_function, unicode_literals
@@ -145,4 +145,20 @@ class ConstantWithCustomDataTest(PythonicTestCase):
             foo = 4, attrs(data=[1, 2, 3])
         
         assert_equals([1, 2, 3], OptionalData.data_for(OptionalData.foo))
+
+    def test_can_add_custom_data_with_arbitrary_attribute_names(self):
+        data_as_list = attrs(data=[42, 21])
+        assert_equals([42, 21], data_as_list.data)
+
+        kw_only = attrs(answer=42, question=21)
+        assert_equals(
+            {'answer': 42, 'question': 21},
+            kw_only.data
+        )
+
+        data_as_dict = attrs(data={'answer': 42, 'question': 21})
+        assert_equals(
+            {'answer': 42, 'question': 21},
+            data_as_dict.data
+        )
 
