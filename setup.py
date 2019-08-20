@@ -20,13 +20,13 @@ def requires_from_file(filename):
 setup(
     name = 'SmartConstants',
     version = '1.1.0',
-    description = 'magic class to declare easy-to-use "enum" values',
+    description = 'magic class to declare easy-to-use "enum"-like values',
     long_description=(read('Changelog.txt')),
 
     author='Felix Schwarz',
     author_email='felix.schwarz@oss.schwarz.eu',
     license='MIT',
-    url='https://bitbucket.org/felixschwarz/smart-constants/',
+    url='https://github.com/FelixSchwarz/smartconstants/',
 
     install_requires=requires_from_file('requirements.txt'),
     test_requires=requires_from_file('dev_requirements.txt'),
@@ -40,6 +40,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 
