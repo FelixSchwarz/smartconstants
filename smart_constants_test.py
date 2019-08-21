@@ -162,3 +162,16 @@ class ConstantWithCustomDataTest(PythonicTestCase):
             data_as_dict.data
         )
 
+    def test_can_return_custom_data_in_options(self):
+        class CustomData(BaseConstantsClass):
+            foo = 4, attrs(data=u'foogroup')
+            bar = 7, attrs(group=u'bg', css=u'blue')
+
+        data_options = CustomData.options()
+        assert_equals(((4, None), (7, None)), data_options)
+        foo = data_options[0]
+        assert_equals('foogroup', foo.data)
+        bar = data_options[1]
+        assert_equals('bg', bar.group)
+        assert_equals('blue', bar.css)
+

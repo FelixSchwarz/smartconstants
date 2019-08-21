@@ -154,6 +154,20 @@ class ConstantValueBuilder(type):
         return cls.as_enum().__members__
 
 
+
+class TupleWithData(tuple):
+    def __new__(cls, *args, **data):
+        klass = super(TupleWithData, cls).__new__(cls, args)
+        klass._data = data
+        return klass
+
+    def __getattr__(self, key):
+        if key in self._data:
+            return self._data[key]
+        raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, key))
+
+
+
 class NotSet(object):
     pass
 
@@ -207,7 +221,9 @@ class BaseConstantsClass(six.with_metaclass(ConstantValueBuilder, object)):
             attr = cls._constants_map[key]
             if exclude_invisible and (not attr.visible) and (not attr.value == current_value):
                 continue
-            _options.append((attr.value, attr.label))
+            data = attr.data if isinstance(attr.data, dict) else {'data': attr.data}
+            item = TupleWithData(attr.value, attr.label, **data)
+            _options.append(item)
         return tuple(_options)
 
     @classmethod

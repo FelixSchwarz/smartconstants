@@ -1,6 +1,10 @@
 Changelog
 ******************************
 
+1.3.0 (2019-08-21)
+====================
+- also return custom data from ".options()" method
+
 1.2.0 (2019-08-20)
 ====================
 - ability to use named parameters for data attributes in "attrs()"
