@@ -19,7 +19,7 @@ def requires_from_file(filename):
 
 setup(
     name = 'SmartConstants',
-    version = '1.2.0',
+    version = '1.3.0',
     description = 'magic class to declare easy-to-use "enum"-like values',
     long_description=(read('Changelog.txt')),
 
